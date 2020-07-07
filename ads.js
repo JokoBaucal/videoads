@@ -3,6 +3,7 @@ var adsLoaded = false;
 var adContainer;
 var adDisplayContainer;
 var adsLoader;
+var adsManager;
 
 // On window load, attach an event to the play button click
 // that triggers playback on the video element
@@ -17,7 +18,30 @@ function initializeIMA() {
   adContainer = document.getElementById('ad-container');
   adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoElement);
   adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+    adsLoader.addEventListener(
+      google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+      onAdsManagerLoaded,
+      false);
+  adsLoader.addEventListener(
+      google.ima.AdErrorEvent.Type.AD_ERROR,
+      onAdError,
+      false);
 
+...
+
+function onAdsManagerLoaded(adsManagerLoadedEvent) {
+  // Instantiate the AdsManager from the adsLoader response and pass it the video element
+  adsManager = adsManagerLoadedEvent.getAdsManager(
+      videoElement);
+}
+
+function onAdError(adErrorEvent) {
+  // Handle the error logging.
+  console.log(adErrorEvent.getError());
+  if(adsManager) {
+    adsManager.destroy();
+  }
+}
   // Let the AdsLoader know when the video has ended
   videoElement.addEventListener('ended', function() {
     adsLoader.contentComplete();
