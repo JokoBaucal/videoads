@@ -1,0 +1,12 @@
+@import url('//cdn.flowplayer.com/releases/native/edge/style/flowplayer.css');
+  
+#player {
+  max-width: 40em;
+  width: 100%;
+  float: left;
+}
+
+#controls {
+  float: left;
+  padding: 1em;
+}
